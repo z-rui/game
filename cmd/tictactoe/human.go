@@ -22,7 +22,7 @@ func askPlaying() tictactoe.Cell {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if err == nil && len(answer) == 2 {
+		if err == nil && len(answer) >= 2 {
 			switch unicode.ToUpper(rune(answer[0])) {
 			case 'O':
 				return tictactoe.O
@@ -44,7 +44,7 @@ func (p *HumanPlayer) Next(s *tictactoe.State) (t *tictactoe.State) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if len(coord) == 3 {
+		if len(coord) >= 3 {
 			var m tictactoe.Move
 			m.I = uint8(unicode.ToUpper(rune(coord[0])) - 'A')
 			m.J = uint8(coord[1] - '1')

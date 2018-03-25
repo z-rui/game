@@ -22,7 +22,7 @@ func askPlaying() othello.Cell {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if err == nil && len(answer) == 2 {
+		if err == nil && len(answer) >= 2 {
 			switch unicode.ToUpper(rune(answer[0])) {
 			case 'O':
 				return othello.O
@@ -47,7 +47,7 @@ func (p *HumanPlayer) Next(s *othello.State) (t *othello.State) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		if len(coord) == 3 {
+		if len(coord) >= 3 {
 			var m othello.Move
 			m.I = uint8(unicode.ToUpper(rune(coord[0])) - 'A')
 			m.J = uint8(coord[1] - '1')
