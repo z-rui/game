@@ -31,13 +31,13 @@ type State interface {
 // evaluation after certain iterations.
 func MinMax(s State, iterations uint, findMin bool) (next State, eval Evaluation) {
 	if findMin {
-		return min(s, iterations, Lost)
+		return min(s, iterations, Lost, Won)
 	} else {
-		return max(s, iterations, Won)
+		return max(s, iterations, Lost, Won)
 	}
 }
 
-func min(s State, iterations uint, limit Evaluation) (next State, eval Evaluation) {
+func min(s State, iterations uint, α, β Evaluation) (next State, eval Evaluation) {
 	nxt := s.Next()
 	if iterations == 0 || len(nxt) == 0 {
 		eval = s.Eval()
@@ -45,19 +45,22 @@ func min(s State, iterations uint, limit Evaluation) (next State, eval Evaluatio
 	}
 	eval = Won
 	for _, t := range nxt {
-		_, e := max(t, iterations-1, eval)
+		_, e := max(t, iterations-1, α, β)
 		if next == nil || e < eval {
 			next = t
 			eval = e
-			if e <= limit {
-				break
+			if e < β {
+				β = e
+				if α >= β {
+					break
+				}
 			}
 		}
 	}
 	return
 }
 
-func max(s State, iterations uint, limit Evaluation) (next State, eval Evaluation) {
+func max(s State, iterations uint, α, β Evaluation) (next State, eval Evaluation) {
 	nxt := s.Next()
 	if iterations == 0 || len(nxt) == 0 {
 		eval = s.Eval()
@@ -65,12 +68,15 @@ func max(s State, iterations uint, limit Evaluation) (next State, eval Evaluatio
 	}
 	eval = Lost
 	for _, t := range nxt {
-		_, e := min(t, iterations-1, eval)
+		_, e := min(t, iterations-1, α, β)
 		if next == nil || e > eval {
 			next = t
 			eval = e
-			if e >= limit {
-				break
+			if e > α {
+				α = e
+				if α >= β {
+					break
+				}
 			}
 		}
 	}
